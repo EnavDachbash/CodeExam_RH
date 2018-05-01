@@ -55,18 +55,19 @@ def pattern_finder():
     for f in files:
         with open(f) as cf:
             line_number = 1
+            name = cf.name
             for line in cf.readlines():
                 if re.search(args.pattern, line):
                     if args.underline:
-                        print '{0} {1}'.format(cf.name, print_match_underline(line, args.pattern, line_number))
+                        print '{0} {1}'.format(name, print_match_underline(line, args.pattern, line_number))
                     elif args.color:
-                        print print_match_color(cf, line_number, line, args.pattern)
+                        print '{0}:{1} {2}'.format(name, line_number, print_match_color(line, args.pattern))
                     else:
-                        print_match_machine(cf, line_number, line, args.pattern)
+                        print '{0}:{1}:{2}'.format(name, line_number, print_match_machine(line, args.pattern))
                 line_number += 1
 
 
-def print_match_machine(cf, line_number, line, pattern):
+def print_match_machine(line, pattern):
     """
     This function will receive the file and line to search, pattern to search for, and the line number.
 
@@ -76,18 +77,17 @@ def print_match_machine(cf, line_number, line, pattern):
     :return:
     """
     if re.search(pattern, line):
-        matches = re.finditer(pattern,line)
+        matches = re.finditer(pattern, line)
         for match in matches:
             startpos = int(match.start())
             matchtext = match.group()
-            print '{0}:{1}:{2}:{3}'.format(cf.name, line_number, startpos, matchtext)
+            return '{0}:{1}'.format(startpos, matchtext)
 
 
 def print_match_underline(line, pattern, line_number):
     """
     This function will receive the line to search, pattern to search for, and the line number.
     it will underline the match by inserting a new line of '^' char where match is found.
-
     :param line: line to search through.
     :param startpos: start position of a match in a given line.
     :param endpos: end position of a match in a given line.
@@ -110,8 +110,7 @@ def print_match_underline(line, pattern, line_number):
             print '{0} {1}'.format(str(line_number), ' ' + line)
             print newline
 
-
-def print_match_color(cf, line_number, line, pattern):
+def print_match_color(line, pattern):
     """
 
     :param line_number:
@@ -123,7 +122,7 @@ def print_match_color(cf, line_number, line, pattern):
     for word in line_split:
         if re.match(pattern, word):
             line_split[line_split.index(word)] = '{0}{1}{2}'.format(Color.RED, word, Color.END)
-            print '{0} {1} {2}'.format(cf.name, str(line_number), ' '.join(line_split))
+            return '{0}'.format(' '.join(line_split))
 
 
 def main():
