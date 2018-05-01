@@ -76,10 +76,11 @@ def print_match_machine(cf, line_number, line, pattern):
     :return:
     """
     if re.search(pattern, line):
-        newline = re.search(pattern, line)
-        startpos = re.search(pattern, line).start()
-        matchtext = newline.string[newline.start():newline.end()]
-        print '{0}:{1}:{2}:{3}'.format(cf.name, line_number, startpos, matchtext)
+        matches = re.finditer(pattern,line)
+        for match in matches:
+            startpos = int(match.start())
+            matchtext = match.group()
+            print '{0}:{1}:{2}:{3}'.format(cf.name, line_number, startpos, matchtext)
 
 
 def print_match_underline(line, pattern, line_number):
@@ -92,19 +93,22 @@ def print_match_underline(line, pattern, line_number):
     :param endpos: end position of a match in a given line.
     :return: given line + another line containing '^' where match is found. thus, underlining it.
     """
-    line = line.rstrip()
-    startpos = re.search(pattern, line).start() + 1
-    endpos = re.search(pattern, line).end() + 1
-    length = len(line)
-    newline = "  "
 
-    for i in range(length):
-        if i in range(startpos, endpos):
-            newline += "^"
-        else:
-            newline += " "
-    print '{0} {1}'.format(str(line_number), ' ' + line)
-    print newline
+    line = line.rstrip()
+    if re.search(pattern, line):
+        matches = re.finditer(pattern, line)
+        for match in matches:
+            startpos = int(match.start()) + 1
+            endpos = int(match.end()) + 1
+            length = len(line)
+            newline = "  "
+            for i in range(length):
+                if i in range(startpos, endpos):
+                    newline += "^"
+                else:
+                    newline += " "
+            print '{0} {1}'.format(str(line_number), ' ' + line)
+            print newline
 
 
 def print_match_color(line_number, line):
