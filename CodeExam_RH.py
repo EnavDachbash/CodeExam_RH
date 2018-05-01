@@ -63,35 +63,31 @@ def pattern_finder():
                     elif args.color:
                         print '{0}:{1} {2}'.format(name, line_number, print_match_color(line, args.pattern))
                     else:
-                        print '{0}:{1}:{2}'.format(name, line_number, print_match_machine(line, args.pattern))
+                        matches = re.finditer(args.pattern, line)
+                        for match in matches:
+                            print '{0}:{1}:{2}'.format(name, line_number, print_match_machine(match))
                 line_number += 1
 
 
-def print_match_machine(line, pattern):
+def print_match_machine(match):
     """
-    This function will receive the file and line to search, pattern to search for, and the line number.
+    This function will receive a match object and will return the according format.
 
-    :param line:
-    :param pattern:
-    :param line_number:
-    :return:
+    :param match:
+    :return: start position of the match:text of the match
     """
-    if re.search(pattern, line):
-        matches = re.finditer(pattern, line)
-        for match in matches:
-            startpos = int(match.start())
-            matchtext = match.group()
-            return '{0}:{1}'.format(startpos, matchtext)
+    startpos = int(match.start())
+    matchtext = match.group()
+    return '{0}:{1}'.format(startpos, matchtext)
 
 
 def print_match_underline(line, pattern, line_number):
     """
-    This function will receive the line to search, pattern to search for, and the line number.
-    it will underline the match by inserting a new line of '^' char where match is found.
-    :param line: line to search through.
-    :param startpos: start position of a match in a given line.
-    :param endpos: end position of a match in a given line.
-    :return: given line + another line containing '^' where match is found. thus, underlining it.
+    This function will receive
+    :param line:
+    :param pattern:
+    :param line_number:
+    :return:
     """
 
     line = line.rstrip()
@@ -113,8 +109,8 @@ def print_match_underline(line, pattern, line_number):
 def print_match_color(line, pattern):
     """
 
-    :param line_number:
     :param line:
+    :param pattern:
     :return:
     """
 
