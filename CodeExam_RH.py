@@ -60,7 +60,7 @@ def pattern_finder():
                     if args.underline:
                         print '{0} {1}'.format(cf.name, print_match_underline(line, args.pattern, line_number))
                     elif args.color:
-                        print '{0} {1}'.format(cf.name, print_match_color(line_number, line))
+                        print print_match_color(cf, line_number, line, args.pattern)
                     else:
                         print_match_machine(cf, line_number, line, args.pattern)
                 line_number += 1
@@ -111,7 +111,7 @@ def print_match_underline(line, pattern, line_number):
             print newline
 
 
-def print_match_color(line_number, line):
+def print_match_color(cf, line_number, line, pattern):
     """
 
     :param line_number:
@@ -121,9 +121,9 @@ def print_match_color(line_number, line):
 
     line_split = line.rstrip().split(' ')
     for word in line_split:
-        if re.match(args.pattern, word):
+        if re.match(pattern, word):
             line_split[line_split.index(word)] = '{0}{1}{2}'.format(Color.RED, word, Color.END)
-            print '{0} {1}'.format(str(line_number), ' '.join(line_split))
+            print '{0} {1} {2}'.format(cf.name, str(line_number), ' '.join(line_split))
 
 
 def main():
