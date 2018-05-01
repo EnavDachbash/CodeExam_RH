@@ -59,7 +59,7 @@ def pattern_finder():
             for line in cf.readlines():
                 if re.search(args.pattern, line):
                     if args.underline:
-                        print '{0} {1}'.format(name, print_match_underline(line, args.pattern, line_number))
+                        print '{0}'.format(print_match_underline(name, line, args.pattern, line_number))
                     elif args.color:
                         print '{0}:{1} {2}'.format(name, line_number, print_match_color(line_number, line, args.pattern))
                     else:
@@ -81,7 +81,7 @@ def print_match_machine(match):
     return '{0}:{1}'.format(startpos, matchtext)
 
 
-def print_match_underline(line, pattern, line_number):
+def print_match_underline(name, line, pattern, line_number):
     """
     This function will receive
     :param line:
@@ -91,20 +91,21 @@ def print_match_underline(line, pattern, line_number):
     """
 
     line = line.rstrip()
+    lengthoffilename = len(name)
     if re.search(pattern, line):
         matches = re.finditer(pattern, line)
         for match in matches:
-            startpos = int(match.start()) + 1
-            endpos = int(match.end()) + 1
-            length = len(line)
+            startpos = int(match.start()) + lengthoffilename + 1
+            endpos = int(match.end()) + lengthoffilename + 1
+            length = len(line) + lengthoffilename
             newline = "  "
             for i in range(length):
                 if i in range(startpos, endpos):
                     newline += "^"
                 else:
                     newline += " "
-            print '{0} {1}'.format(str(line_number), ' ' + line)
-            print newline
+            print '{0} {1} {2}'.format(name, str(line_number), ' ' + line)
+            return '{0}'.format(' ' + newline)
 
 
 def print_match_color(line_number, line, pattern):
