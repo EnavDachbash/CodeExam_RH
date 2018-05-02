@@ -59,9 +59,9 @@ def pattern_finder():
             for line in cf.readlines():
                 if re.search(args.pattern, line):
                     if args.underline:
-                        print '{0}'.format(print_match_underline(name, line, args.pattern, line_number))
+                        print_match_underline(name, line, args.pattern, line_number)
                     elif args.color:
-                        print '{0}:{1} {2}'.format(name, line_number, print_match_color(line_number, line, args.pattern))
+                        print '{0}:{1} {2}'.format(name, line_number, print_match_color(line, args.pattern))
                     else:
                         matches = re.finditer(args.pattern, line)
                         for match in matches:
@@ -105,10 +105,11 @@ def print_match_underline(name, line, pattern, line_number):
                 else:
                     newline += " "
             print '{0} {1} {2}'.format(name, str(line_number), ' ' + line)
-            return '{0}'.format(' ' + newline)
+            print '{0}'.format(' ' + newline)
 
 
-def print_match_color(line_number, line, pattern):
+
+def print_match_color(line, pattern):
     """
 
     :param line_number:
@@ -120,7 +121,11 @@ def print_match_color(line_number, line, pattern):
     for word in line_split:
         if re.match(pattern, word):
             line_split[line_split.index(word)] = '{0}{1}{2}'.format(Color.RED, word, Color.END)
-            print '{0} {1}'.format(str(line_number), ' '.join(line_split))
+        else :
+            line_split[line_split.index(word)] = '{0}'.format(word)
+    return ' '.join(line_split)
+
+
 
 
 
