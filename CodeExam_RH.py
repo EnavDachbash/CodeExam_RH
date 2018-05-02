@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # CodeExam_RH by
 
-"""
-Search for a provided regex in the file received.
-"""
-
 __author__ = 'Enav Hidekel'
 __date__ = 'May 02, 2018'
 
@@ -47,36 +43,39 @@ class Color:
     END = '\033[0m'
 
 
-def pattern_finder():
+def pattern_finder(f):
     """
+    This function would receive a file and search for a RegEx pattern given in advance.
 
-    :return:
+
+    :return: It will print it according to the format selected by the user (--color, --machine-code, --underline).
     """
-    # Iterate over all files provided, search for regex pattern in each file in turn
-    for f in files:
-        with open(f) as cf:
-            line_number = 1
-            name = cf.name
-            for line in cf.readlines():
-                if re.search(args.pattern, line):
-                    if args.underline:
-                        print_match_underline(name, line, args.pattern, line_number)
-                    elif args.color:
-                        print '{0}:{1} {2}'.format(name, line_number, print_match_color(line, args.pattern))
-                    else:
-                        matches = re.finditer(args.pattern, line)
-                        for match in matches:
-                            print_match_machine(match, name, line_number)
-                line_number += 1
+    # Iterate over each file provided, search for regex pattern in each file in turn
+    with open(f) as current:
+        line_number = 1
+        name = current.name
+        for line in current.readlines():
+            if re.search(args.pattern, line):
+                if args.underline:
+                    print_match_underline(name, line, args.pattern, line_number)
+                elif args.color:
+                    print '{0}:{1} {2}'.format(name, line_number, print_match_color(line, args.pattern))
+                else:
+                    matches = re.finditer(args.pattern, line)
+                    for match in matches:
+                        print_match_machine(match, name, line_number)
+            line_number += 1
 
 
 def print_match_machine(match, name, line_number):
     """
+    This function receives a match object, named file and a line number within that file.
+    it's purpose is to manipulate output into this format:
 
-    :param match:
-    :param name:
-    :param line_number:
-    :return:
+    :param match: object of type match
+    :param name: file name corresponding to the match
+    :param line_number: line number corresponding to the match
+    :return: returns the matching text in this format: file_name:no_line:start_pos:matched_text
     """
     startpos = int(match.start())
     matchtext = match.group()
@@ -85,12 +84,14 @@ def print_match_machine(match, name, line_number):
 
 def print_match_underline(name, line, pattern, line_number):
     """
+    This function receives a named file and, line number within that file,
+    RegEx expression to match within that line and the line number.
 
-    :param name:
-    :param line:
-    :param pattern:
-    :param line_number:
-    :return:
+    :param name:file name corresponding to the match.
+    :param line: line text corresponding to the match.
+    :param pattern: RegEx expression to match.
+    :param line_number: line number corresponding to the match.
+    :return: returns the same line with matches underlined with the '^' sign.
     """
 
     line = line.rstrip()
@@ -114,10 +115,12 @@ def print_match_underline(name, line, pattern, line_number):
 
 def print_match_color(line, pattern):
     """
+    This function receives a named file and, line number within that file,
+    RegEx expression to match within that line and the line number.
 
-    :param line:
-    :param pattern:
-    :return:
+    :param line: line text corresponding to the match.
+    :param pattern: RegEx expression to match.
+    :return: returns the same line with matches colored Red.
     """
     line_split = line.rstrip().split(' ')
     for word in line_split:
@@ -129,7 +132,9 @@ def print_match_color(line, pattern):
 
 
 def main():
-    pattern_finder()
+
+    for f in files:
+        pattern_finder(f)
 
 if __name__ == '__main__':
     main()
