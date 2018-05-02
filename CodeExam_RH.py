@@ -5,7 +5,8 @@
 Search for a provided regex in the file received.
 """
 
-__author__ = 'enavd'
+__author__ = 'Enav Hidekel'
+__date__ = 'May 02, 2018'
 
 import re
 from argparse import ArgumentParser
@@ -65,25 +66,27 @@ def pattern_finder():
                     else:
                         matches = re.finditer(args.pattern, line)
                         for match in matches:
-                            print '{0}:{1}:{2}'.format(name, line_number, print_match_machine(match))
+                            print_match_machine(match, name, line_number)
                 line_number += 1
 
 
-def print_match_machine(match):
+def print_match_machine(match, name, line_number):
     """
-    This function will receive a match object and will return the according format.
 
     :param match:
-    :return: start position of the match:text of the match
+    :param name:
+    :param line_number:
+    :return:
     """
     startpos = int(match.start())
     matchtext = match.group()
-    return '{0}:{1}'.format(startpos, matchtext)
+    print '{0}:{1}:{2}:{3}'.format(name, line_number, startpos, matchtext)
 
 
 def print_match_underline(name, line, pattern, line_number):
     """
-    This function will receive
+
+    :param name:
     :param line:
     :param pattern:
     :param line_number:
@@ -112,7 +115,6 @@ def print_match_underline(name, line, pattern, line_number):
 def print_match_color(line, pattern):
     """
 
-    :param line_number:
     :param line:
     :param pattern:
     :return:
@@ -124,9 +126,6 @@ def print_match_color(line, pattern):
         else :
             line_split[line_split.index(word)] = '{0}'.format(word)
     return ' '.join(line_split)
-
-
-
 
 
 def main():
